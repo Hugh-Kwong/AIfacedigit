@@ -53,13 +53,25 @@ class SelfPerceptron:
             for j in range(7):
                 splitArr[i][j] = splitArr[i][j].flatten()
         #now we need to calculate the f(x) value for each 0-9 digit perceptrons and select the best result, in range 10 as it goes from 0-9
-        dot = np.dot(splitArr, self.weights)
+        #the weights[0][0] corresponds with the 0th perceptron's weights at the 0th weight and splitArr[0][0] refers to the 0,0 vector of the split array
+        #not working
+        epic = []
+        for h in range(10):
+            dot = []
+            for i in range(6):
+                for j in range(6):
+                    dot.append(sum(np.dot(self.weights[i][j],splitArr[i][j])))    
+            epic.append(sum(dot))
+        temp2 = np.array(epic)    
+        return(temp2.argmax())
              
             
 
     #to train we run through the array of images for epoch amount of iterations and call prediction on each iteration. The weights will be changed depend on the error given by the prediction.
     #we can count the number of arrays with len(array)
-    def train(self, inputs):
+    #self is self, training data is list of 2D matrices, training labels is list of corresponding labels.
+    def train(self, training_data, training_labels):
+        for i in range(len(training_data)):
         filler
         
     
@@ -115,6 +127,7 @@ def transposeArray(arr):
 # Y = digitlabelArray("numlab.txt")
 X = digit28Array("numbers.txt")
 L = np.zeros((10, 49))
+L = L+1
 Y = np.array(X[0])
 Y = np.hsplit(Y, 7)
 
@@ -123,6 +136,13 @@ for i in range(7):
 for i in range(7):
     for j in range(7):
         Y[i][j] = Y[i][j].flatten()
-        
-print(sum(np.dot(L[0][0],Y[0][0])))
-
+epic = []
+for h in range(10):
+    dot = []
+    for i in range(6):
+        for j in range(6):
+            dot.append(sum(np.dot(L[i][j],Y[i][j])))    
+    epic.append(sum(dot))
+temp2 = np.array(epic)
+print(temp2)
+print(temp2[temp2.argmax()])
