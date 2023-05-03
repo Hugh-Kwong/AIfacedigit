@@ -31,27 +31,17 @@ class Perceptron:
         return correct / len(test_data)
 class SelfPerceptron:
     #weights will change to an array of 49 weights corresponding to each 4x4 split array look at comments on predict
-    def __init__(self, input_size, learning_rate=0.1, num_epochs=1000):
-        self.input_size = 27
+    def __init__(self, input_size = 27, learning_rate=0.1, num_epochs=1000):
+        self.input_size = input_size
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
-        self.weights = np.zeros(10, 49)
+        self.weights = np.zeros((10, 49))
     #given an input array we need to divide each array 28x28 into 49 4x4 arrays, make sure that the array is a numpy array so you can use dot product function.
     #this function should take each of these 49 4x4  arrays and multiply them with their corresponding weights and then return the dot product. This will return the value of f(x)
     #ok new update, in digit perceptron, every number 0-9 will have an asssociated perceptron weight vector. We need to run the image through each of the vectors and then choose the highest value to predict
     #then we return the results, weight updating will occur in training not in predict
     def predict(self, inputs):
-        #self  will refer to the stuff in init inputs will be the the given 28x28 array
-        tempArr = np.array(inputs)
-        #split the array into 7 4x2 arrays
-        splitArr = np.hsplit(tempArr, 7)
-        #split the array into 49 4x4 
-        for i in range(7):
-            splitArr[i] = np.array_split(splitArr[i], 7)
-        #transforms each 4x4 into a 16 1D array so ending up with 49 length 16 vectors for the weights
-        for i in range(7):
-            for j in range(7):
-                splitArr[i][j] = splitArr[i][j].flatten()
+        splitArr = splitArray(inputs)
         #now we need to calculate the f(x) value for each 0-9 digit perceptrons and select the best result, in range 10 as it goes from 0-9
         #the weights[0][0] corresponds with the 0th perceptron's weights at the 0th weight and splitArr[0][0] refers to the 0,0 vector of the split array
         #not working
@@ -62,17 +52,58 @@ class SelfPerceptron:
                 for j in range(6):
                     dot.append(sum(np.dot(self.weights[i][j],splitArr[i][j])))    
             epic.append(sum(dot))
-        temp2 = np.array(epic)    
+        temp2 = np.array(epic)
         return(temp2.argmax())
              
             
 
     #to train we run through the array of images for epoch amount of iterations and call prediction on each iteration. The weights will be changed depend on the error given by the prediction.
     #we can count the number of arrays with len(array)
-    #self is self, training data is list of 2D matrices, training labels is list of corresponding labels.
+    #self is self, training data is the name of the data file, training labels is file of corresponding labels.
     def train(self, training_data, training_labels):
-        for i in range(len(training_data)):
-        filler
+        temp = digit28Array(training_data)
+        ltemp = digitlabelArray(training_labels)
+        #i is each array, 
+        for i in range(len(temp) ):
+            prediction = self.predict(temp[i])
+            # print(prediction, ltemp[i])
+            split = splitArray(temp[i])
+            # print(split[0][0])
+            if prediction !=  ltemp[i]:
+                count = 0
+                print("EPIC STYLE", prediction, ltemp[i])
+                for j in range(7):
+                    for k in range(7):
+                        self.weights[prediction][count] -= sum(split[j][k])
+                        print(self.weights[prediction][count])
+                        count += 1
+            
+                
+                
+                    
+        #             self.weights[prediction][j] -= sum(split[prediction][j])
+        #             self.weights[ltemp[i]][j] += sum(split[ltemp[i]][j])
+        # print(self.weights)
+        
+            
+    #reads in a digit image file and returns a list of 28x28 matrices with " "= 0, # = 1, and + = 2 WE CAN CHANGE THE + TO 1 AS WELL IF LAZY (this will matter much more in the prediction function,  this may change the %success rate)
+    #this is new btw much better that I read the instructions a 15th time
+   
+def splitArray(inputs):
+    #self  will refer to the stuff in init inputs will be the the given 28x28 array
+    tempArr = np.array(inputs)
+    #split the array into 7 4x2 arrays
+    splitArr = np.hsplit(tempArr, 7)
+    #split the array into 49 4x4 
+    for i in range(7):
+        splitArr[i] = np.array_split(splitArr[i], 7)
+    #transforms each 4x4 into a 16 1D array so ending up with 49 length 16 vectors for the weights
+    for i in range(7):
+        for j in range(7):
+            splitArr[i][j] = splitArr[i][j].flatten()
+    return splitArr                   
+            
+    
         
     
 #reads in a digit image file and returns a list of 28x28 matrices with " "= 0, # = 1, and + = 2 WE CAN CHANGE THE + TO 1 AS WELL IF LAZY (this will matter much more in the prediction function,  this may change the %success rate)
@@ -105,7 +136,6 @@ def digitlabelArray(filename):
 
 
 def printArray(arr):
-    
     for i in range(len(arr)):
         print()
         for j in range(len(arr[i])):
@@ -127,22 +157,14 @@ def transposeArray(arr):
 # Y = digitlabelArray("numlab.txt")
 X = digit28Array("numbers.txt")
 L = np.zeros((10, 49))
-L = L+1
+L = L
 Y = np.array(X[0])
 Y = np.hsplit(Y, 7)
 
-for i in range(7):
-    Y[i] = np.array_split(Y[i], 7)
-for i in range(7):
-    for j in range(7):
-        Y[i][j] = Y[i][j].flatten()
-epic = []
-for h in range(10):
-    dot = []
-    for i in range(6):
-        for j in range(6):
-            dot.append(sum(np.dot(L[i][j],Y[i][j])))    
-    epic.append(sum(dot))
-temp2 = np.array(epic)
-print(temp2)
-print(temp2[temp2.argmax()])
+# for i in range(len(X)):
+#     print(i)
+# print(L[0])
+M = splitArray(X[0])
+# print(M[0][1])
+digitP = SelfPerceptron()
+digitP.train("numbers.txt", "numlab.txt")
