@@ -1,36 +1,34 @@
 import numpy as np
-
-#WARNING LEGIT NONE OF THE PERCEPTRON CLASS WORKS
-# Define the perceptron class
+#none of the perceptron class works still lmao
 class Perceptron:
-    def __init__(self, input_size, learning_rate=0.1, epochs=50):
+    def __init__(self, input_size, learning_rate=0.1, num_epochs=100):
         self.input_size = input_size
         self.learning_rate = learning_rate
-        self.epochs = epochs
+        self.num_epochs = num_epochs
         self.weights = np.zeros(input_size + 1)
 
-    # Define the activation function
-    def activation(self, x):
-        return 1 if x >= 0 else 0
+    def predict(self, inputs):
+        inputs = np.hstack((inputs, [1]))
+        activation = np.dot(inputs, self.weights)
+        return 1 if activation >= 0 else 0
 
-    # Define the predict function
-    def predict(self, x):
-        x = np.insert(x, 0, 1)
-        z = self.weights.T.dot(x)
-        a = self.activation(z)
-        return a
+    def train(self, train_data, train_labels):
+        for epoch in range(self.num_epochs):
+            for inputs, label in zip(train_data, train_labels):
+                inputs_flat = np.hstack(inputs)
+                prediction = self.predict(inputs_flat)
+                error = label - prediction
+                self.weights += self.learning_rate * error * np.hstack((inputs_flat, [1]))
 
-    # Define the train function
-    def train(self, X, y):
-        for epoch in range(self.epochs):
-            for i in range(len(X)):
-                x = X[i]
-                y_pred = self.predict(x)
-                error = y[i] - y_pred
-                x = np.insert(x, 0, 1)
-                self.weights += self.learning_rate * error * x
-    
-    
+    def evaluate(self, test_data, test_labels):
+        correct = 0
+        for inputs, label in zip(test_data, test_labels):
+            inputs_flat = np.hstack(inputs)
+            prediction = self.predict(inputs_flat)
+            if prediction == label:
+                correct += 1
+        return correct / len(test_data)
+
     
     
 def digitArray(filename):
@@ -57,42 +55,26 @@ def digitlabelArray(filename):
     return label_arr    
 
 
-def printArray(arr, larr):
+def printArray(arr):
+    
     for i in range(len(arr)):
         print()
-        print(larr[i])
+        count = 0
         for j in range(len(arr[i])):
+            count += 1
             print(arr[i][j])
-
+        print(count)    
         
-digits = digitArray("trainingimages.txt")
-dlabels = digitlabelArray("traininglabels.txt")            
-# Create a perceptron with input size 784 (since each image is 28x28)
-perceptron = Perceptron(input_size=784)
-
-# Train the perceptron on the data
-perceptron.train(digits, dlabels)
-
-# Predict the label of a new image
-new_image = [0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,1,1,1,1,1,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,2,1,1,2,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,2,1,1,1,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,2,2,1,1,1,2,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,0,0,0,0,0,0,
-0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,
-0,0,0,0,0,2,1,1,1,2,2,0,0,0,0,0,0,0,2,1,1,1,0,0,0,0,0,0,
-0,0,0,0,0,0,1,1,1,1,1,1,2,2,0,0,0,2,1,1,1,2,0,0,0,0,0,0,
-0,0,0,0,0,0,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,2,2,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,2,2,1,1,1,1,2,2,0,0,0,0,0,0,0,0,0,]
-  # 28x28 flattened into a 784-dimensional vector
-predicted_label = perceptron.predict(new_image)
+def transposeArray(arr):
+    returnList = []
+    for i in range(len(arr)):
+        z = []
+        x = np.array(arr[i])
+        x = x.transpose(1, 0)
+        z = np.array_split(x, len(x))
+        returnList.append(z)
+    return returnList            
+# digits =printArray(digitArray("numbers.txt"),(digitlabelArray("numlab.txt"))   )
+X = digitArray("numbers.txt")
+X =transposeArray(X)
+printArray(X)
