@@ -29,6 +29,7 @@ class Perceptron:
                 correct += 1
         return correct / len(test_data)
 class SelfPerceptron:
+    #weights will change to an array of 49 weights corresponding to each 4x4 split array look at comments on predict
     def __init__(self, input_size, learning_rate=0.1, num_epochs=1000):
         self.input_size = 27
         self.learning_rate = learning_rate
@@ -36,8 +37,16 @@ class SelfPerceptron:
         self.weights = np.zeros(input_size + 1)
     #given an input array we need to divide each array 28x28 into 49 4x4 arrays, make sure that the array is a numpy array so you can use dot product function.
     #this function should take each of these 49 4x4  arrays and multiply them with their corresponding weights and then return the dot product. This will return the value of f(x)
-    #i need to look at vid again to see what determines if its a number or not cause i forgot
+    #ok new update, in digit perceptron, every number 0-9 will have an asssociated perceptron weight vector. We need to run the image through each of the vectors and then choose the highest value to predict
+    #then we return the results, weight updating will occur in training not in predict
     def predict(self, inputs):
+        #self  will refer to the stuff in init inputs will be the the given 28x28 array
+        tempArr = np.array(inputs)
+        #split the array into 49 4x4 arrays
+        splitArr = np.hsplit(tempArr, 7)
+        for i in range(7):
+            splitArr[i] = np.array_split(splitArr[i], 7)
+
         filler
     #to train we run through the array of images for epoch amount of iterations and call prediction on each iteration. The weights will be changed depend on the error given by the prediction.
     def train(self, inputs):
@@ -95,6 +104,10 @@ def transposeArray(arr):
 # X =transposeArray(X)
 # Y = digitlabelArray("numlab.txt")
 X = digit28Array("numbers.txt")
+Y = np.array(X[0])
+Y = np.hsplit(Y, 7)
+for i in range(7):
+    Y[i] = np.array_split(Y[i], 7)
 
-printArray(X)
-# print(X[0])
+# printArray(X)
+print(Y[0])
