@@ -5,7 +5,8 @@ class Perceptron:
         self.input_size = input_size
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
-        self.weights = np.zeros(input_size + 1)
+        self.weights = np.zeros(49, 10)
+        
 
     def predict(self, inputs):
         inputs = np.hstack((inputs, [1]))
@@ -34,7 +35,7 @@ class SelfPerceptron:
         self.input_size = 27
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
-        self.weights = np.zeros(input_size + 1)
+        self.weights = np.zeros(10, 49)
     #given an input array we need to divide each array 28x28 into 49 4x4 arrays, make sure that the array is a numpy array so you can use dot product function.
     #this function should take each of these 49 4x4  arrays and multiply them with their corresponding weights and then return the dot product. This will return the value of f(x)
     #ok new update, in digit perceptron, every number 0-9 will have an asssociated perceptron weight vector. We need to run the image through each of the vectors and then choose the highest value to predict
@@ -42,13 +43,23 @@ class SelfPerceptron:
     def predict(self, inputs):
         #self  will refer to the stuff in init inputs will be the the given 28x28 array
         tempArr = np.array(inputs)
-        #split the array into 49 4x4 arrays
+        #split the array into 7 4x2 arrays
         splitArr = np.hsplit(tempArr, 7)
+        #split the array into 49 4x4 
         for i in range(7):
             splitArr[i] = np.array_split(splitArr[i], 7)
+        #transforms each 4x4 into a 16 1D array so ending up with 49 length 16 vectors for the weights
+        for i in range(7):
+            for j in range(7):
+                splitArr[i][j] = splitArr[i][j].flatten()
+        #now we need to calculate the f(x) value for each 0-9 digit perceptrons and select the best result, in range 10 as it goes from 0-9
+        for digit in range(10):
+            hello 
+            
 
         filler
     #to train we run through the array of images for epoch amount of iterations and call prediction on each iteration. The weights will be changed depend on the error given by the prediction.
+    #we can count the number of arrays with len(array)
     def train(self, inputs):
         filler
         
@@ -104,10 +115,15 @@ def transposeArray(arr):
 # X =transposeArray(X)
 # Y = digitlabelArray("numlab.txt")
 X = digit28Array("numbers.txt")
+L = np.zeros((10, 49))
 Y = np.array(X[0])
 Y = np.hsplit(Y, 7)
+
 for i in range(7):
     Y[i] = np.array_split(Y[i], 7)
+for i in range(7):
+    for j in range(7):
+        Y[i][j] = Y[i][j].flatten()
 
-# printArray(X)
-print(Y[0])
+print(L)
+
