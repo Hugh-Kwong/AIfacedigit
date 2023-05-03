@@ -1,5 +1,5 @@
 import numpy as np
-#use this as reference
+
 class Perceptron:
     def __init__(self, input_size, learning_rate=0.1, num_epochs=100):
         self.input_size = input_size
@@ -28,37 +28,41 @@ class Perceptron:
             if prediction == label:
                 correct += 1
         return correct / len(test_data)
-#work on this one
 class SelfPerceptron:
     def __init__(self, input_size, learning_rate=0.1, num_epochs=1000):
         self.input_size = 27
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
         self.weights = np.zeros(input_size + 1)
-    #given an input array, each line is a vector and predict takes the dot product of the vector and weigths and returns 1 if actication >= 0 and 0 if not
+    #given an input array we need to divide each array 28x28 into 49 4x4 arrays, make sure that the array is a numpy array so you can use dot product function.
+    #this function should take each of these 49 4x4  arrays and multiply them with their corresponding weights and then return the dot product. This will return the value of f(x)
+    #i need to look at vid again to see what determines if its a number or not cause i forgot
     def predict(self, inputs):
-        for i in range(27):
-            activation = np.dot(inputs[i], self.weights)
-        return 1 if activation >= 0 else 0 
+        filler
     #to train we run through the array of images for epoch amount of iterations and call prediction on each iteration. The weights will be changed depend on the error given by the prediction.
-    def train(self, inputs):s
+    def train(self, inputs):
+        filler
         
     
-#reads in a file into a array of the images [[[0,... 1],[ 0,.. 1],...], [[0,... 1],[ 0,.. 1],...],....]
-def digitArray(filename):
-    with open(filename) as file:
-        lines = file.readlines()
+#reads in a digit image file and returns a list of 28x28 matrices with " "= 0, # = 1, and + = 2 
+#this is new btw much better that I read the instructions a 15th time
+def digit28Array(filename):
+    segment_size = 28
+    segments = []
+    with open(filename, 'r') as f:
+        current_segment = []
+        for i, line in enumerate(f):
+            segment_num = i // segment_size
+            if i % segment_size == 0:
+                if current_segment:
+                    segments.append(current_segment)
+                current_segment = []
+            current_segment.append([1 if ch == "#" else 2 if ch == "+" else 0 for ch in line.rstrip("\n")])
+        if current_segment:
+            segments.append(current_segment)        
+    return segments
 
-    num_arr = []
-    temp_arr = []
-    for line in lines:
-        if '+' in line or '#' in line:
-            temp_arr.append([1 if ch == "#" else 2 if ch == "+" else 0 for ch in line.rstrip("\n")])
-        elif(temp_arr != []):
-            num_arr.append(temp_arr)
-            temp_arr = []
-            continue
-    return num_arr
+
 #reads in a file containing the labels of the corresponding images [1,2,...]
 def digitlabelArray(filename):
     with open(filename) as file:
@@ -75,7 +79,8 @@ def printArray(arr):
         print()
         for j in range(len(arr[i])):
             print(arr[i][j])
-#transposes an array, doesnt work very well rn
+#transposes an array, doesnt work very well rn /
+#MIGHT NOT NEED
 def transposeArray(arr):
     returnList = []
     
@@ -85,11 +90,11 @@ def transposeArray(arr):
         returnList.append(x)
     return returnList            
 # digits =printArray(digitArray("numbers.txt"),(digitlabelArray("numlab.txt"))   )
-X = digitArray("numbers.txt")
+# X = digitArray("numbers.txt")
 
-X =transposeArray(X)
-Y = digitlabelArray("numlab.txt")
+# X =transposeArray(X)
+# Y = digitlabelArray("numlab.txt")
+X = digit28Array("numbers.txt")
 
 printArray(X)
-
-
+# print(X[0])
