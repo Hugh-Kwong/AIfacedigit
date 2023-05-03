@@ -44,7 +44,7 @@ class SelfPerceptron:
         filler
         
     
-#reads in a digit image file and returns a list of 28x28 matrices with " "= 0, # = 1, and + = 2 
+#reads in a digit image file and returns a list of 28x28 matrices with " "= 0, # = 1, and + = 2 WE CAN CHANGE THE + TO 1 AS WELL IF LAZY (this will matter much more in the prediction function,  this may change the %success rate)
 #this is new btw much better that I read the instructions a 15th time
 def digit28Array(filename):
     segment_size = 28
