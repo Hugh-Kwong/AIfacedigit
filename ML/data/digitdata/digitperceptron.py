@@ -53,11 +53,10 @@ class SelfPerceptron:
             for j in range(7):
                 splitArr[i][j] = splitArr[i][j].flatten()
         #now we need to calculate the f(x) value for each 0-9 digit perceptrons and select the best result, in range 10 as it goes from 0-9
-        for digit in range(10):
-            hello 
+        dot = np.dot(splitArr, self.weights)
+             
             
 
-        filler
     #to train we run through the array of images for epoch amount of iterations and call prediction on each iteration. The weights will be changed depend on the error given by the prediction.
     #we can count the number of arrays with len(array)
     def train(self, inputs):
@@ -124,6 +123,6 @@ for i in range(7):
 for i in range(7):
     for j in range(7):
         Y[i][j] = Y[i][j].flatten()
-
-print(L)
+        
+print(sum(np.dot(L[0][0],Y[0][0])))
 
