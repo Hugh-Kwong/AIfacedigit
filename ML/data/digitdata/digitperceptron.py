@@ -1,5 +1,5 @@
 import numpy as np
-
+#use this as reference
 class Perceptron:
     def __init__(self, input_size, learning_rate=0.1, num_epochs=100):
         self.input_size = input_size
@@ -28,15 +28,19 @@ class Perceptron:
             if prediction == label:
                 correct += 1
         return correct / len(test_data)
+#work on this one
 class SelfPerceptron:
-    def __init__(self, input_size, learning_rate=0.1, num_epochs=100):
+    def __init__(self, input_size, learning_rate=0.1, num_epochs=1000):
         self.input_size = 27
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
         self.weights = np.zeros(input_size + 1)
+    #given an input array, each line is a vector and predict takes the dot product of the vector and weigths and returns 1 if actication >= 0 and 0 if not
     def predict(self, inputs):
-        activation = np.dot(inputs, self.weights)
+        for i in range(27):
+            activation = np.dot(inputs[i], self.weights)
         return 1 if activation >= 0 else 0 
+    #to train we run through the array of images for epoch amount of iterations and call prediction on each iteration. The weights will be changed depend on the error given by the prediction.
     def train(self, inputs):s
         
     
@@ -87,3 +91,5 @@ X =transposeArray(X)
 Y = digitlabelArray("numlab.txt")
 
 printArray(X)
+
+
