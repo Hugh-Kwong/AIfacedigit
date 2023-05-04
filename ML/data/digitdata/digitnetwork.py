@@ -49,9 +49,15 @@ model = tf.keras.models.Sequential([
 loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 model.compile(optimizer='adam', loss=loss_fn, metrics=['accuracy'])
 
-# Train the model
-model.fit(X, Y, epochs=5)
+for i in range(10):
+    # Train the model
+    indexX = int(len(X) * i+1/10)
+    indexY = int(len(Y) * i+1/10)
+    pX = X[:indexX]
+    pY = X[:indexY]
+    print("CURRENT:", (i+1)*10, "%")
+    model.fit(X, Y, epochs=5)
 
-# Evaluate the model
-model.evaluate(test, ltest, verbose=2)
+    # Evaluate the model
+    model.evaluate(test, ltest, verbose=2)
 
