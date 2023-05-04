@@ -35,19 +35,16 @@ class SelfPerceptron:
         for z in range(10):
             for i in range(len(temp)):
                 prediction = self.predict(temp[i])
-                # print(prediction, ltemp[i])
                 split = splitArray(temp[i])
-                # print(split[0][0])
-                print("EPIC STYLE", prediction, ltemp[i])
-
-                if prediction > 0 and ltemp[i] == 0:
+                prediction = int(prediction)
+                label = int(ltemp[i])
+                if prediction >= 0 and label == 0:
                     count = 0
                     for j in range(10):
                         for k in range(10):
                             self.weights[count] -= sum(split[j][k])
                             count+= 1
-                elif prediction <= 0 and ltemp[i] == 1:
-                    print("EPIC STYLE", prediction, ltemp[i])
+                elif prediction < 0 and label == 1:
                     count = 0
                     for j in range(10):
                         for k in range(10):
@@ -63,7 +60,11 @@ class SelfPerceptron:
         count = 0
         for i in range(len(temp)):
             prediction = self.predict(temp[i])
-            if(prediction == int(ltemp[i])):
+            if prediction >= 0:
+                result = 1
+            else:
+                result = 0
+            if(result == int(ltemp[i])):
                 count += 1
         percentcorrect = count/len(temp)
         print("Correct:", percentcorrect*100, "%")
