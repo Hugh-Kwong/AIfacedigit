@@ -34,12 +34,12 @@ class SelfPerceptron:
     #to train we run through the array of images for epoch amount of iterations and call prediction on each iteration. The weights will be changed depend on the error given by the prediction.
     #we can count the number of arrays with len(array)
     #self is self, training data is the name of the data file, training labels is file of corresponding labels.
-    def train(self, training_data, training_labels):
+    def train(self, training_data, training_labels, percent):
         temp = digit28Array(training_data)
         ltemp = digitlabelArray(training_labels)
         #i is each array, 
         for z in range(2):
-            for i in range(len(temp) ):
+            for i in range(int(len(temp) * percent/10)):
                 prediction = self.predict(temp[i])
                 # print(prediction, ltemp[i])
                 split = splitArray(temp[i])
@@ -122,6 +122,8 @@ def digitlabelArray(filename):
 
 
 
-digitP = SelfPerceptron()
-digitP.train("trainingimages.txt", "traininglabels.txt")
-digitP.evaluate("validationimages.txt", "validationlabels.txt")
+for i in range(10):
+    print((i+1)*10,"%")
+    digitP = SelfPerceptron()
+    digitP.train("trainingimages.txt", "traininglabels.txt", i+1)
+    digitP.evaluate("testimages.txt", "testlabels.txt")
